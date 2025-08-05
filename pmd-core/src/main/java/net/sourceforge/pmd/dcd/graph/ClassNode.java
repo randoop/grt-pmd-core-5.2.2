@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,10 +29,12 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 
 	private List<MethodNode> methodNodes;
 
+	@SideEffectFree
 	public ClassNode(String name) {
 		this.name = name;
 	}
 
+	@Impure
 	public Object accept(NodeVisitor visitor, Object data) {
 		visitor.visitFields(this, data);
 		visitor.visitConstructors(this, data);
@@ -37,10 +42,12 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return data;
 	}
 
+	@Pure
 	public String getName() {
 		return name;
 	}
 
+	@Impure
 	public Class<?> getType() {
 		Class<?> type = typeReference == null ? null : typeReference.get();
 		if (type == null) {
@@ -50,6 +57,7 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return type;
 	}
 
+	@Impure
 	public FieldNode defineField(String name, String desc) {
 		if (fieldNodes == null) {
 			fieldNodes = new ArrayList<FieldNode>(1);
@@ -64,6 +72,7 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return fieldNode;
 	}
 
+	@Impure
 	public ConstructorNode defineConstructor(String name, String desc) {
 		if (constructorNodes == null) {
 			constructorNodes = new ArrayList<ConstructorNode>(1);
@@ -79,6 +88,7 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return constructorNode;
 	}
 
+	@Impure
 	public MethodNode defineMethod(String name, String desc) {
 		if (methodNodes == null) {
 			methodNodes = new ArrayList<MethodNode>(1);
@@ -94,22 +104,27 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return methodNode;
 	}
 
+	@SideEffectFree
 	public List<FieldNode> getFieldNodes() {
 		return fieldNodes != null ? fieldNodes : Collections.<FieldNode> emptyList();
 	}
 
+	@SideEffectFree
 	public List<ConstructorNode> getConstructorNodes() {
 		return constructorNodes != null ? constructorNodes : Collections.<ConstructorNode> emptyList();
 	}
 
+	@SideEffectFree
 	public List<MethodNode> getMethodNodes() {
 		return methodNodes != null ? methodNodes : Collections.<MethodNode> emptyList();
 	}
 
+	@Pure
 	public int compareTo(ClassNode that) {
 		return this.name.compareTo(that.name);
 	}
 
+	@Pure
 	public boolean equals(Object obj) {
 		if (obj instanceof ClassNode) {
 			return this.name.equals(((ClassNode)obj).name);
@@ -117,6 +132,7 @@ public class ClassNode implements NodeVisitorAcceptor, Comparable<ClassNode> {
 		return false;
 	}
 
+	@Pure
 	public int hashCode() {
 		return name.hashCode();
 	}

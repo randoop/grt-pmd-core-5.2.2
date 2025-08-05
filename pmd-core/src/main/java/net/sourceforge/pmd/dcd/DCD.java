@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -80,14 +82,17 @@ public class DCD {
 	// allocate those references to the interface/super-class.
 	//
 
+	@Impure
 	public static void dump(UsageGraph usageGraph, boolean verbose) {
 		usageGraph.accept(new DumpNodeVisitor(), Boolean.valueOf(verbose));
 	}
 
+	@Impure
 	public static void report(UsageGraph usageGraph, boolean verbose) {
 		usageGraph.accept(new UsageNodeVisitor(), Boolean.valueOf(verbose));
 	}
 
+	@Impure
 	public static void main(String[] args) throws Exception {
 		// 1) Directories
 		List<File> directories = new ArrayList<File>();
@@ -95,6 +100,7 @@ public class DCD {
 
 		// Basic filter
 		FilenameFilter javaFilter = new FilenameFilter() {
+			@SideEffectFree
 			public boolean accept(File dir, String name) {
 				// Recurse on directories
 				if (new File(dir, name).isDirectory()) {

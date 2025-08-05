@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd.asm;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,25 +45,30 @@ public class TypeSignatureVisitor extends SignatureVisitor {
     private List<Class<?>> parameterTypes = new ArrayList<Class<?>>(0);
 
     private final PrintVisitor p;
+    @Impure
     protected void println(String s) {
         p.println(s);
     }
+    @Impure
     protected void printlnIndent(String s) {
         p.printlnIndent(s);
     }
 
+    @Impure
     public TypeSignatureVisitor() {
         super(Opcodes.ASM4);
         p = new PrintVisitor();
 	init();
     }
 
+    @Impure
     public TypeSignatureVisitor(PrintVisitor parent) {
 	super(Opcodes.ASM4);
 	p = new PrintVisitor(parent);
 	init();
     }
 
+    @Impure
     public void init() {
 	typeType = FIELD_TYPE;
 	type = null;
@@ -69,6 +76,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	parameterTypes.clear();
     }
 
+    @Impure
     public Class<?> getFieldType() {
 	popType();
 	if (fieldType == null) {
@@ -77,6 +85,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return fieldType;
     }
 
+    @Impure
     public Class<?> getMethodReturnType() {
 	popType();
 	if (returnType == null) {
@@ -85,6 +94,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return returnType;
     }
 
+    @Impure
     public Class<?>[] getMethodParameterTypes() {
 	popType();
 	if (parameterTypes == null) {
@@ -97,10 +107,12 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	}
     }
 
+    @Impure
     private void pushType(int type) {
 	this.typeType = type;
     }
 
+    @Impure
     private void popType() {
 	switch (typeType) {
 	case NO_TYPE:
@@ -123,6 +135,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	arrayDimensions = 0;
     }
 
+    @SideEffectFree
     private Class<?> getType() {
 	Class<?> type = null;
 	if (this.type != null) {
@@ -136,6 +149,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return type;
     }
 
+    @Impure
     public SignatureVisitor visitArrayType() {
 	if (TRACE) {
 	    println("visitArrayType:");
@@ -144,6 +158,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public void visitBaseType(char descriptor) {
 	if (TRACE) {
 	    println("visitBaseType:");
@@ -182,6 +197,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	}
     }
 
+    @Impure
     public SignatureVisitor visitClassBound() {
 	if (TRACE) {
 	    println("visitClassBound:");
@@ -189,6 +205,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public void visitClassType(String name) {
 	if (TRACE) {
 	    println("visitClassType:");
@@ -198,6 +215,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	this.type = ClassLoaderUtil.getClass(name);
     }
 
+    @Impure
     public void visitEnd() {
 	if (TRACE) {
 	    println("visitEnd:");
@@ -205,6 +223,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	popType();
     }
 
+    @Impure
     public SignatureVisitor visitExceptionType() {
 	if (TRACE) {
 	    println("visitExceptionType:");
@@ -212,6 +231,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public void visitFormalTypeParameter(String name) {
 	if (TRACE) {
 	    println("visitFormalTypeParameter:");
@@ -219,6 +239,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	}
     }
 
+    @Impure
     public void visitInnerClassType(String name) {
 	if (TRACE) {
 	    println("visitInnerClassType:");
@@ -226,6 +247,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	}
     }
 
+    @Impure
     public SignatureVisitor visitInterface() {
 	if (TRACE) {
 	    println("visitInterface:");
@@ -233,6 +255,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public SignatureVisitor visitInterfaceBound() {
 	if (TRACE) {
 	    println("visitInterfaceBound:");
@@ -240,6 +263,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public SignatureVisitor visitParameterType() {
 	if (TRACE) {
 	    println("visitParameterType:");
@@ -249,6 +273,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public SignatureVisitor visitReturnType() {
 	if (TRACE) {
 	    println("visitReturnType:");
@@ -258,6 +283,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public SignatureVisitor visitSuperclass() {
 	if (TRACE) {
 	    println("visitSuperclass:");
@@ -265,12 +291,14 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public void visitTypeArgument() {
 	if (TRACE) {
 	    println("visitTypeArgument:");
 	}
     }
 
+    @Impure
     public SignatureVisitor visitTypeArgument(char wildcard) {
 	if (TRACE) {
 	    println("visitTypeArgument:");
@@ -279,6 +307,7 @@ public class TypeSignatureVisitor extends SignatureVisitor {
 	return this;
     }
 
+    @Impure
     public void visitTypeVariable(String name) {
 	if (TRACE) {
 	    println("visitTypeVariable:");

@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.util.filter;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.File;
 
 public class FileExtensionFilter implements Filter<File> {
@@ -12,6 +14,7 @@ public class FileExtensionFilter implements Filter<File> {
 	/**
 	 * Matches any files with the given extensions, ignoring case
 	 */
+	@Impure
 	public FileExtensionFilter(String... extensions) {
 		this(true, extensions);
 	}
@@ -19,6 +22,7 @@ public class FileExtensionFilter implements Filter<File> {
 	/**
 	 * Matches any files with the given extensions, optionally ignoring case.
 	 */
+	@Impure
 	public FileExtensionFilter(boolean ignoreCase, String... extensions) {
 		this.extensions = extensions;
 		this.ignoreCase = ignoreCase;
@@ -29,6 +33,7 @@ public class FileExtensionFilter implements Filter<File> {
 		}
 	}
 
+	@SideEffectFree
 	public boolean filter(File file) {
 		boolean accept = extensions == null;
 		if (!accept) {

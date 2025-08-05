@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.Comparator;
 
 /**
@@ -13,9 +15,11 @@ public final class MemberNodeComparator implements Comparator<MemberNode> {
 
 	public static final MemberNodeComparator INSTANCE = new MemberNodeComparator();
 
+	@SideEffectFree
 	private MemberNodeComparator() {
 	}
 
+	@Pure
 	public int compare(MemberNode node1, MemberNode node2) {
 		if (node1 instanceof FieldNode) {
 			if (node2 instanceof FieldNode) {

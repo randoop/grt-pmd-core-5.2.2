@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -41,66 +43,82 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 
 		private boolean ignoreFieldInlinable = true;
 
+		@Pure
 		public boolean isIgnoreClassAnonymous() {
 			return ignoreClassAnonymous;
 		}
 
+		@Impure
 		public void setIgnoreClassAnonymous(boolean ignoreClassAnonymous) {
 			this.ignoreClassAnonymous = ignoreClassAnonymous;
 		}
 
+		@Pure
 		public boolean isIgnoreConstructorStaticInitializer() {
 			return ignoreConstructorStaticInitializer;
 		}
 
+		@Impure
 		public void setIgnoreConstructorStaticInitializer(boolean ignoreConstructorStaticInitializer) {
 			this.ignoreConstructorStaticInitializer = ignoreConstructorStaticInitializer;
 		}
 
+		@Pure
 		public boolean isIgnoreConstructorSinglePrivateNoArg() {
 			return ignoreConstructorSinglePrivateNoArg;
 		}
 
+		@Impure
 		public void setIgnoreConstructorSinglePrivateNoArg(boolean ignoreConstructorSinglePrivateNoArg) {
 			this.ignoreConstructorSinglePrivateNoArg = ignoreConstructorSinglePrivateNoArg;
 		}
 
+		@Pure
 		public boolean isIgnoreConstructorAllPrivate() {
 			return ignoreConstructorAllPrivate;
 		}
 
+		@Impure
 		public void setIgnoreConstructorAllPrivate(boolean ignoreConstructorAllPrivate) {
 			this.ignoreConstructorAllPrivate = ignoreConstructorAllPrivate;
 		}
 
+		@Pure
 		public boolean isIgnoreMethodJavaLangObjectOverride() {
 			return ignoreMethodJavaLangObjectOverride;
 		}
 
+		@Impure
 		public void setIgnoreMethodJavaLangObjectOverride(boolean ignoreMethodJavaLangObjectOverride) {
 			this.ignoreMethodJavaLangObjectOverride = ignoreMethodJavaLangObjectOverride;
 		}
 
+		@Pure
 		public boolean isIgnoreMethodAllOverride() {
 			return ignoreMethodAllOverride;
 		}
 
+		@Impure
 		public void setIgnoreMethodAllOverride(boolean ignoreMethodAllOverride) {
 			this.ignoreMethodAllOverride = ignoreMethodAllOverride;
 		}
 
+		@Pure
 		public boolean isIgnoreMethodMain() {
 			return ignoreMethodMain;
 		}
 
+		@Impure
 		public void setIgnoreMethodMain(boolean ignoreMethodMain) {
 			this.ignoreMethodMain = ignoreMethodMain;
 		}
 
+		@Pure
 		public boolean isIgnoreFieldInlinable() {
 			return ignoreFieldInlinable;
 		}
 
+		@Impure
 		public void setIgnoreFieldInlinable(boolean ignoreFieldInlinable) {
 			this.ignoreFieldInlinable = ignoreFieldInlinable;
 		}
@@ -109,6 +127,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 
 	private final Options options = new Options();
 
+	@Impure
 	public Object visit(UsageGraph usageGraph, Object data) {
 		System.out.println("----------------------------------------");
 		super.visit(usageGraph, data);
@@ -116,6 +135,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 		return data;
 	}
 
+	@Impure
 	public Object visit(ClassNode classNode, Object data) {
 		boolean log = true;
 		if (options.isIgnoreClassAnonymous() && classNode.getType().isAnonymousClass()) {
@@ -130,6 +150,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 		}
 	}
 
+	@Impure
 	public Object visit(FieldNode fieldNode, Object data) {
 		if (fieldNode.getUsers().isEmpty()) {
 			boolean log = true;
@@ -151,6 +172,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 		return super.visit(fieldNode, data);
 	}
 
+	@Impure
 	public Object visit(ConstructorNode constructorNode, Object data) {
 		if (constructorNode.getUsers().isEmpty()) {
 			boolean log = true;
@@ -179,6 +201,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 		return super.visit(constructorNode, data);
 	}
 
+	@Impure
 	private static boolean isMainMethod(MethodNode node) {
 		
 		final Method method = node.getMember();
@@ -193,6 +216,7 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 	}
 	
 	
+	@Impure
 	public Object visit(MethodNode methodNode, Object data) {
 		if (methodNode.getUsers().isEmpty()) {
 			boolean log = true;
@@ -221,10 +245,12 @@ public class UsageNodeVisitor extends NodeVisitorAdapter {
 		return super.visit(methodNode, data);
 	}
 
+	@Impure
 	private void ignore(String description, ClassNode classNode) {
 		System.out.println("Ignoring " + description + ": " + classNode.getName());
 	}
 
+	@Impure
 	private void ignore(String description, MemberNode memberNode) {
 		System.out.println("Ignoring " + description + ": " + memberNode.toStringLong());
 	}

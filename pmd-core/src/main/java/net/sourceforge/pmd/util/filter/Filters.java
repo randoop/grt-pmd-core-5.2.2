@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.util.filter;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class Filters {
 	 * @param collection The Collection to filter.
 	 * @return A List containing only those objects for which the Filter returned <code>true</code>.
 	 */
+	@Impure
 	public static <T> List<T> filter(Filter<T> filter, Collection<T> collection) {
 		List<T> list = new ArrayList<T>();
 		for (T obj : collection) {
@@ -37,6 +41,7 @@ public class Filters {
 	 * @param extensions The extensions to filter.
 	 * @return A File Filter.
 	 */
+	@Impure
 	public static Filter<File> getFileExtensionFilter(String... extensions) {
 		return new FileExtensionFilter(extensions);
 	}
@@ -45,6 +50,7 @@ public class Filters {
 	 * Get a File Filter for directories.
 	 * @return A File Filter.
 	 */
+	@Pure
 	public static Filter<File> getDirectoryFilter() {
 		return DirectoryFilter.INSTANCE;
 	}
@@ -54,6 +60,7 @@ public class Filters {
 	 * @param extensions The extensions to filter.
 	 * @return A File Filter.
 	 */
+	@Impure
 	public static Filter<File> getFileExtensionOrDirectoryFilter(String... extensions) {
 		return new OrFilter<File>(getFileExtensionFilter(extensions), getDirectoryFilter());
 	}
@@ -67,14 +74,17 @@ public class Filters {
 	 * @param filter A String Filter.
 	 * @return A File Filter.
 	 */
+	@Impure
 	public static Filter<File> toNormalizedFileFilter(final Filter<String> filter) {
 		return new Filter<File>() {
+			@Impure
 			public boolean filter(File file) {
 				String path = file.getPath();
 				path = path.replace('\\', '/');
 				return filter.filter(path);
 			}
 
+			@SideEffectFree
 			public String toString() {
 				return filter.toString();
 			}
@@ -89,12 +99,14 @@ public class Filters {
 	 * @param filter The existing String Filter.
 	 * @return A Filter on the desired type.
 	 */
+	@Impure
 	public static <T> Filter<T> fromStringFilter(final Filter<String> filter) {
 		return new Filter<T>() {
 			public boolean filter(T obj) {
 				return filter.filter(obj.toString());
 			}
 
+			@SideEffectFree
 			public String toString() {
 				return filter.toString();
 			}
@@ -106,12 +118,15 @@ public class Filters {
 	 * @param filter The File Filter.
 	 * @return A FilenameFilter.
 	 */
+	@Impure
 	public static FilenameFilter toFilenameFilter(final Filter<File> filter) {
 		return new FilenameFilter() {
+			@Impure
 			public boolean accept(File dir, String name) {
 				return filter.filter(new File(dir, name));
 			}
 
+			@SideEffectFree
 			public String toString() {
 				return filter.toString();
 			}
@@ -123,12 +138,15 @@ public class Filters {
 	 * @param filter The FilenameFilter.
 	 * @return A File Filter.
 	 */
+	@Impure
 	public static Filter<File> toFileFilter(final FilenameFilter filter) {
 		return new Filter<File>() {
+			@Impure
 			public boolean filter(File file) {
 				return filter.accept(file.getParentFile(), file.getName());
 			}
 
+			@SideEffectFree
 			public String toString() {
 				return filter.toString();
 			}
@@ -148,6 +166,7 @@ public class Filters {
 	 * @param excludeRegexes The exclude regular expressions.  May be <code>null</code>.
 	 * @return A String Filter.
 	 */
+	@Impure
 	public static Filter<String> buildRegexFilterExcludeOverInclude(List<String> includeRegexes,
 			List<String> excludeRegexes) {
 		OrFilter<String> includeFilter = new OrFilter<String>();
@@ -182,6 +201,7 @@ public class Filters {
 	 * @param excludeRegexes The exclude regular expressions.  May be <code>null</code>.
 	 * @return A String Filter.
 	 */
+	@Impure
 	public static Filter<String> buildRegexFilterIncludeOverExclude(List<String> includeRegexes,
 			List<String> excludeRegexes) {
 		OrFilter<String> includeFilter = new OrFilter<String>();

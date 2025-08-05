@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.util.filter;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,19 +43,23 @@ public class RegexStringFilter implements Filter<String> {
     protected Pattern pattern;
     protected String endsWith;
 
+    @Impure
     public RegexStringFilter(String regex) {
 	this.regex = regex;
 	optimize();
     }
 
+    @Pure
     public String getRegex() {
 	return this.regex;
     }
 
+    @Pure
     public String getEndsWith() {
 	return this.endsWith;
     }
 
+    @Impure
     protected void optimize() {
 	final Matcher matcher = ENDS_WITH.matcher(this.regex);
 	if (matcher.matches()) {
@@ -72,6 +79,7 @@ public class RegexStringFilter implements Filter<String> {
 	}
     }
 
+    @SideEffectFree
     public boolean filter(String obj) {
 	if (this.endsWith != null) {
 	    return obj.endsWith(this.endsWith);
@@ -83,6 +91,7 @@ public class RegexStringFilter implements Filter<String> {
 	}
     }
 
+    @Pure
     @Override
     public String toString() {
 	return "matches " + this.regex;

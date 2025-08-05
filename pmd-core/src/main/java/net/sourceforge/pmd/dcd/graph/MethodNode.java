@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
@@ -19,11 +22,14 @@ public class MethodNode extends MemberNode<MethodNode, Method> {
 
 	private WeakReference<Method> methodReference;
 
+	@SideEffectFree
+	@Impure
 	public MethodNode(ClassNode classNode, String name, String desc) {
 		super(classNode, name, desc);
 		// getMember();
 	}
 
+	@Impure
 	public Method getMember() {
 		Method method = methodReference == null ? null : methodReference.get();
 		if (method == null) {
@@ -36,6 +42,7 @@ public class MethodNode extends MemberNode<MethodNode, Method> {
 		return method;
 	}
 
+	@Impure
 	public int compareTo(MethodNode that) {
 		// Order by method name
 		int cmp = this.getName().compareTo(that.getName());
@@ -56,6 +63,8 @@ public class MethodNode extends MemberNode<MethodNode, Method> {
 		return cmp;
 	}
 
+	@Pure
+	@Impure
 	public boolean equals(Object obj) {
 		if (obj instanceof MethodNode) {
 			MethodNode that = (MethodNode)obj;

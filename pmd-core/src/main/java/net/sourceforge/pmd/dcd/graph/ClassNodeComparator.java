@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.Comparator;
 
 /**
@@ -13,9 +16,12 @@ public final class ClassNodeComparator implements Comparator {
 
 	public static final ClassNodeComparator INSTANCE = new ClassNodeComparator();
 
+	@SideEffectFree
 	private ClassNodeComparator() {
 	}
 
+	@Pure
+	@Impure
 	public int compare(Object obj1, Object obj2) {
 		if (obj1 instanceof String && obj2 instanceof String) {
 			return ((String)obj1).compareTo((String)obj2);

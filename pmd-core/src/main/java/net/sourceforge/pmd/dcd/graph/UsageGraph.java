@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,10 +52,12 @@ public class UsageGraph implements NodeVisitorAcceptor {
 
 	protected final Filter<String> classFilter;
 
+	@SideEffectFree
 	public UsageGraph(Filter<String> classFilter) {
 		this.classFilter = classFilter;
 	}
 
+	@Impure
 	public Object accept(NodeVisitor visitor, Object data) {
 		for (ClassNode classNode : classNodes) {
 			visitor.visit(classNode, data);
@@ -61,11 +65,13 @@ public class UsageGraph implements NodeVisitorAcceptor {
 		return data;
 	}
 
+	@Impure
 	public boolean isClass(String className) {
 		checkClassName(className);
 		return Collections.binarySearch(classNodes, className, ClassNodeComparator.INSTANCE) >= 0;
 	}
 
+	@Impure
 	public ClassNode defineClass(String className) {
 		checkClassName(className);
 		int index = Collections.binarySearch(classNodes, className, ClassNodeComparator.INSTANCE);
@@ -79,16 +85,19 @@ public class UsageGraph implements NodeVisitorAcceptor {
 		return classNode;
 	}
 
+	@Impure
 	public FieldNode defineField(String className, String name, String desc) {
 		ClassNode classNode = defineClass(className);
 		return classNode.defineField(name, desc);
 	}
 
+	@Impure
 	public MemberNode defineConstructor(String className, String name, String desc) {
 		ClassNode classNode = defineClass(className);
 		return classNode.defineConstructor(name, desc);
 	}
 
+	@Impure
 	public MemberNode defineMethod(String className, String name, String desc) {
 		ClassNode classNode = defineClass(className);
 		if (ClassLoaderUtil.CLINIT.equals(name) || ClassLoaderUtil.INIT.equals(name)) {
@@ -98,6 +107,7 @@ public class UsageGraph implements NodeVisitorAcceptor {
 		}
 	}
 
+	@Impure
 	public void usageField(String className, String name, String desc, MemberNode usingMemberNode) {
 		checkClassName(className);
 		if (classFilter.filter(className)) {
@@ -106,6 +116,7 @@ public class UsageGraph implements NodeVisitorAcceptor {
 		}
 	}
 
+	@Impure
 	public void usageMethod(String className, String name, String desc, MemberNode usingMemberNode) {
 		checkClassName(className);
 		if (classFilter.filter(className)) {
@@ -119,11 +130,13 @@ public class UsageGraph implements NodeVisitorAcceptor {
 		}
 	}
 
+	@Impure
 	private void usage(MemberNode use, MemberNode user) {
 		use.addUser(user);
 		user.addUse(use);
 	}
 
+	@SideEffectFree
 	private final void checkClassName(String className) {
 		// Make sure it's not in byte code internal format, or file system path.
 		if (className.indexOf('/') >= 0 || className.indexOf('\\') >= 0) {

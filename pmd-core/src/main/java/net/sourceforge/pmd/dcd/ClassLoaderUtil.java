@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,14 +19,17 @@ public class ClassLoaderUtil {
 
     public static final String INIT = "<init>";
 
+    @SideEffectFree
     public static String fromInternalForm(String internalForm) {
 	return internalForm.replace('/', '.');
     }
 
+    @SideEffectFree
     public static String toInternalForm(String internalForm) {
 	return internalForm.replace('.', '/');
     }
 
+    @Impure
     public static Class<?> getClass(String name) {
 	try {
 	    return ClassLoaderUtil.class.getClassLoader().loadClass(name);
@@ -33,6 +38,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     public static Field getField(Class<?> type, String name) {
 	try {
 	    return myGetField(type, name);
@@ -41,6 +47,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     private static Field myGetField(Class<?> type, String name) throws NoSuchFieldException {
 	// Scan the type hierarchy just like Class.getField(String) using
 	// Class.getDeclaredField(String)
@@ -64,6 +71,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     public static Method getMethod(Class<?> type, String name, Class<?>... parameterTypes) {
 	try {
 	    return myGetMethod(type, name, parameterTypes);
@@ -72,6 +80,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     private static Method myGetMethod(Class<?> type, String name, Class<?>... parameterTypes)
 	    throws NoSuchMethodException {
 	// Scan the type hierarchy just like Class.getMethod(String, Class[])
@@ -111,6 +120,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     public static Constructor<?> getConstructor(Class<?> type, String name, Class<?>... parameterTypes) {
 	try {
 	    return type.getDeclaredConstructor(parameterTypes);
@@ -119,6 +129,7 @@ public class ClassLoaderUtil {
 	}
     }
 
+    @Impure
     public static String getMethodSignature(String name, Class<?>... parameterTypes) {
 	StringBuilder builder = new StringBuilder(name);
 	if (!(name.equals(CLINIT) || name.equals(INIT))) {
@@ -134,6 +145,7 @@ public class ClassLoaderUtil {
 	return builder.toString();
     }
 
+    @Impure
     public static Class<?>[] getParameterTypes(String... parameterTypeNames) {
 	Class<?>[] parameterTypes = new Class[parameterTypeNames.length];
 	for (int i = 0; i < parameterTypeNames.length; i++) {
@@ -142,6 +154,7 @@ public class ClassLoaderUtil {
 	return parameterTypes;
     }
 
+    @Impure
     public static boolean isOverridenMethod(Class<?> clazz, Method method, boolean checkThisClass) {
 	try {
 	    if (checkThisClass) {

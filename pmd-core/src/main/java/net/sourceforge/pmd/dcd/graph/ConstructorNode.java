@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 
@@ -19,19 +22,24 @@ public class ConstructorNode extends MemberNode<ConstructorNode, Constructor<?>>
 
 	private WeakReference<Constructor<?>> constructorReference;
 
+	@SideEffectFree
+	@Impure
 	public ConstructorNode(ClassNode classNode, String name, String desc) {
 		super(classNode, name, desc);
 		// getMember();
 	}
 
+	@Pure
 	public boolean isStaticInitializer() {
 		return ClassLoaderUtil.CLINIT.equals(name);
 	}
 
+	@Pure
 	public boolean isInstanceInitializer() {
 		return ClassLoaderUtil.INIT.equals(name);
 	}
 
+	@Impure
 	public Constructor<?> getMember() {
 		if (ClassLoaderUtil.CLINIT.equals(name)) {
 			return null;
@@ -49,6 +57,7 @@ public class ConstructorNode extends MemberNode<ConstructorNode, Constructor<?>>
 		}
 	}
 
+	@Impure
 	public String toStringLong() {
 		if (ClassLoaderUtil.CLINIT.equals(name)) {
 			return name;
@@ -57,6 +66,7 @@ public class ConstructorNode extends MemberNode<ConstructorNode, Constructor<?>>
 		}
 	}
 
+	@Impure
 	public int compareTo(ConstructorNode that) {
 		// Order by name
 		int cmp = this.getName().compareTo(that.getName());
@@ -77,6 +87,8 @@ public class ConstructorNode extends MemberNode<ConstructorNode, Constructor<?>>
 		return cmp;
 	}
 
+	@Pure
+	@Impure
 	public boolean equals(Object obj) {
 		if (obj instanceof ConstructorNode) {
 			ConstructorNode that = (ConstructorNode)obj;

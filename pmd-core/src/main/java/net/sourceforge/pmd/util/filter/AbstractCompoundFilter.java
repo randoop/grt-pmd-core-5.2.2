@@ -3,6 +3,9 @@
  */
 package net.sourceforge.pmd.util.filter;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +20,12 @@ public abstract class AbstractCompoundFilter<T> implements Filter<T> {
 
 	protected List<Filter<T>> filters;
 
+	@SideEffectFree
 	public AbstractCompoundFilter() {
 		filters = new ArrayList<Filter<T>>(2);
 	}
 
+	@Impure
 	public AbstractCompoundFilter(Filter<T>... filters) {
 		this.filters = new ArrayList<Filter<T>>(filters.length);
 		for (Filter<T> filter : filters) {
@@ -28,20 +33,25 @@ public abstract class AbstractCompoundFilter<T> implements Filter<T> {
 		}
 	}
 
+	@Pure
 	public List<Filter<T>> getFilters() {
 		return filters;
 	}
 
+	@Impure
 	public void setFilters(List<Filter<T>> filters) {
 		this.filters = filters;
 	}
 
+	@Impure
 	public void addFilter(Filter<T> filter) {
 		filters.add(filter);
 	}
 
+	@Pure
 	protected abstract String getOperator();
 
+	@Impure
 	public String toString() {
 		
 		if (filters.isEmpty()) { return "()"; }

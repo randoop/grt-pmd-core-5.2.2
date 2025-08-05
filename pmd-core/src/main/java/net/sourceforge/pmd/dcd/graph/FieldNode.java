@@ -3,6 +3,8 @@
  */
 package net.sourceforge.pmd.dcd.graph;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
@@ -16,11 +18,13 @@ public class FieldNode extends MemberNode<FieldNode, Field> {
 
 	private WeakReference<Field> fieldReference;
 
+	@Impure
 	public FieldNode(ClassNode classNode, String name, String desc) {
 		super(classNode, name, desc);
 		getMember();
 	}
 
+	@Impure
 	public Field getMember() {
 		Field field = fieldReference == null ? null : fieldReference.get();
 		if (field == null) {
@@ -30,10 +34,13 @@ public class FieldNode extends MemberNode<FieldNode, Field> {
 		return field;
 	}
 
+	@Pure
 	public int compareTo(FieldNode that) {
 		return this.name.compareTo(that.name);
 	}
 
+	@Pure
+	@Impure
 	public boolean equals(Object obj) {
 		if (obj instanceof FieldNode) {
 			FieldNode that = (FieldNode)obj;
